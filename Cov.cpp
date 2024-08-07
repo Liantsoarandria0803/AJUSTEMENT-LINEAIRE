@@ -16,9 +16,27 @@ private:
 public:
     // Constructor
     LeastSquares() : a(0), b(0) {}
+    // Method to read data from a file
+    void readData(const std::string& filename) ;
+     // Method to perform the least squares fit using LeastSquares
+    void fit();
+    // Method to predict the value of y for a given x
+    double predict(double x) const ;
+    // Method to print coefficients a, b
+    void printCoefficients() const;
+    // Method to calculate distance 
+     double loss() const;
+      // method to generate all gnuplot script on one file 
+      void generateGnuplotScript(const std::string& dataFilename, const std::string& scriptFilename) const ;
+
+};
+
+                        /*000000000000000000000000000000000000000000000000*/
+
+
 
     // Method to read data from a file
-    void readData(const std::string& filename) {
+    void LeastSquares::readData(const std::string& filename) {
         int size;
         double x,y;
         std::ifstream file(filename);
@@ -36,7 +54,7 @@ public:
     }
 
     // Method to perform the least squares fit
-    void fit() {
+    void LeastSquares::fit() {
         if (x_values.size() != y_values.size()) {
             throw std::invalid_argument("x and y must have the same size");
         }
@@ -61,16 +79,16 @@ public:
     }
 
     // Method to predict the value of y for a given x
-    double predict(double x) const {
+    double LeastSquares::predict(double x) const {
         return a * x + b;
     }
 
     // Method to print the results
-    void printCoefficients() const {
+    void LeastSquares::printCoefficients() const {
         std::cout << "Slope (a): " << a << std::endl;
         std::cout << "Intercept (b): " << b << std::endl;
     }
-      double loss() const {
+      double LeastSquares::loss() const {
         double total_loss = 0;
         int n = y_values.size();
 
@@ -81,7 +99,7 @@ public:
 
         return total_loss / n;
     }
-     void generateGnuplotScript(const std::string& dataFilename, const std::string& scriptFilename) const {
+     void LeastSquares::generateGnuplotScript(const std::string& dataFilename, const std::string& scriptFilename) const {
         // Save data points to a file
         std::ofstream dataFile(dataFilename);
         for (size_t i = 0; i < x_values.size(); ++i) {
@@ -99,7 +117,10 @@ public:
         scriptFile << "pause -1\n";
         scriptFile.close();
     }
-};
+
+                        /*000000000000000000000000000000000000000000000000*/
+
+                        
 
 int main() {
     // Create an instance of LeastSquares

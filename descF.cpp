@@ -6,7 +6,7 @@
 #include <string>
 #include <cmath>
 
-class GradientDescent {
+class LeastSquares {
 private:
     std::vector<double> x_values;
     std::vector<double> y_values;
@@ -18,30 +18,19 @@ private:
 
 public:
     // Constructor
-    GradientDescent() : a(0), b(0) {}
+    LeastSquares() : a(0), b(0) {}
 
     // Method to read data from a file
      void readData(const std::string& filename);
-     //Method to fit model using gradient descent
-      void fit(double a0, double b0, int iterations, double lr);
-      // Model ax+b
-       double predict(double x) const;
-       // Error or Distance 
-       double loss() const ;
-       //printing  coefficients a, b
-        void printCoefficients() const ;
-        // method to generate all gnuplot script on one file 
-        void generateGnuplotScript(const std::string& dataFilename, const std::string& scriptFilename) const;
-
+      // Method to perform the least squares fit using gradient descent
+    void fit(double a0, double b0, int iterations, double lr);
+     // Method to predict the value of y for a given x
+    double predict(double x) const;
+     // Method to calculate the loss (Mean Squared Error)
+    double loss() const;
+     void printCoefficients() const;
 };
-
-                        /*000000000000000000000000000000000000000000000000*/
-
-
-
-
-     // Method to read data from a file
-    void GradientDescent::readData(const std::string& filename) {
+    void LeastSquares::readData(const std::string& filename) {
         int size;
         double x,y;
         std::ifstream file(filename);
@@ -59,7 +48,7 @@ public:
     }
 
     // Method to perform the least squares fit using gradient descent
-    void GradientDescent::fit(double a0, double b0, int iterations, double lr) {
+    void LeastSquares::fit(double a0, double b0, int iterations, double lr) {
         if (x_values.size() != y_values.size()) {
             throw std::invalid_argument("x and y must have the same size");
         }
@@ -89,16 +78,16 @@ public:
             b -= lr * gradB;
             b_values.push_back(b);
         }
-        std::cout << "Loss :"<< GradientDescent::loss()<< std::endl;
+        std::cout << "Loss :"<< LeastSquares::loss()<< std::endl;
     }
 
     // Method to predict the value of y for a given x
-    double GradientDescent::predict(double x) const {
+    double LeastSquares::predict(double x) const {
         return a * x + b;
     }
 
     // Method to calculate the loss (Mean Squared Error)
-    double GradientDescent::loss() const {
+    double loss() const {
         double total_loss = 0;
         int n = y_values.size();
 
@@ -111,12 +100,12 @@ public:
     }
 
     // Method to print the results
-    void GradientDescent::printCoefficients() const {
+    void printCoefficients() const {
         std::cout << "Slope (a): " << a << std::endl;
         std::cout << "Intercept (b): " << b << std::endl;
     }
       // Method to generate a gnuplot script and data file
-    void GradientDescent::generateGnuplotScript(const std::string& dataFilename, const std::string& scriptFilename) const {
+    void generateGnuplotScript(const std::string& dataFilename, const std::string& scriptFilename) const {
         // Save data points to a file
         std::ofstream dataFile(dataFilename);
         for (size_t i = 0; i < x_values.size(); ++i) {
@@ -141,15 +130,10 @@ public:
             scriptFile << "pause -1\n"; // Pause to keep the window open
             scriptFile.close();
     }
-                        
-                        
-                        /*000000000000000000000000000000000000000000000000000000*/
-
-
 
 int main() {
     // Create an instance of LeastSquares
-    GradientDescent ls;
+    LeastSquares ls;
 
     // Read data from file
     ls.readData("data.txt");
